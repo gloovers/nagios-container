@@ -2,8 +2,7 @@ FROM centos:7
 LABEL maintainer="Andrei Andryieuski"
 WORKDIR /tmp
 RUN yum -y update
-RUN yum -y install httpd php gcc glibc glibc-common wget gd gd-devel perl postfix make gettext automake autoconf openssl-devel net-snmp net-snmp-utils epel-release perl-Net-SNMP
-RUN yum -y install unzip
+RUN yum -y install httpd php gcc glibc glibc-common wget gd gd-devel perl postfix make gettext automake autoconf openssl-devel net-snmp net-snmp-utils epel-release perl-Net-SNMP which unzip
 RUN wget -q https://github.com/NagiosEnterprises/nagioscore/archive/nagios-4.4.2.tar.gz -O nagioscore.tar.gz && \
     tar xzf nagioscore.tar.gz && \
     cd /tmp/nagioscore-nagios-4.4.2 && \
@@ -17,7 +16,6 @@ RUN wget -q https://github.com/NagiosEnterprises/nagioscore/archive/nagios-4.4.2
     make install-commandmode && \
     make install-webconf
 RUN htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
-RUN yum -y install which
 RUN cd /tmp && \
     wget --no-check-certificate -O nagios-plugins.tar.gz https://github.com/nagios-plugins/nagios-plugins/archive/release-2.2.1.tar.gz && \
     tar zxf nagios-plugins.tar.gz && \
