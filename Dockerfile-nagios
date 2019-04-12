@@ -2,7 +2,7 @@ FROM centos:7
 LABEL maintainer="Andrei Andryieuski"
 WORKDIR /tmp
 RUN yum -y update
-RUN yum -y install httpd php gcc glibc glibc-common wget gd gd-devel perl postfix make gettext automake autoconf openssl-devel net-snmp net-snmp-utils epel-release perl-Net-SNMP which unzip
+RUN yum -y install php gcc glibc glibc-common wget gd gd-devel perl postfix make gettext automake autoconf openssl-devel net-snmp net-snmp-utils epel-release perl-Net-SNMP which unzip
 RUN wget -q https://github.com/NagiosEnterprises/nagioscore/archive/nagios-4.4.2.tar.gz -O nagioscore.tar.gz && \
     tar xzf nagioscore.tar.gz && \
     cd /tmp/nagioscore-nagios-4.4.2 && \
@@ -13,8 +13,7 @@ RUN wget -q https://github.com/NagiosEnterprises/nagioscore/archive/nagios-4.4.2
     make install && \
     make install-daemoninit && \
     make install-config && \
-    make install-commandmode && \
-    make install-webconf
+    make install-commandmode 
 RUN htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
 RUN cd /tmp && \
     wget --no-check-certificate -O nagios-plugins.tar.gz https://github.com/nagios-plugins/nagios-plugins/archive/release-2.2.1.tar.gz && \
@@ -25,7 +24,8 @@ RUN cd /tmp && \
     make && \
     make install 
 
-EXPOSE 80
-COPY ./entrypoint.sh /tmp
-ENTRYPOINT ["/tmp/entrypoint.sh"]
+COPY entrypoint.sh /tmp/
 
+EXPOSE 80
+ENTRYPOINT ["entrypoint.sh"]
+CMD ["/usr/local/nagios/bin/nagios","/usr/local/nagios/etc/nagios.cfg"]

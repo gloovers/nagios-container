@@ -1,0 +1,13 @@
+FROM centos:7
+LABEL maintainer="Andrei Andryieuski"
+WORKDIR /tmp
+RUN yum -y update
+RUN yum -y install httpd php wget perl openssl-devel epel-release perl-Net-SNMP which unzip
+
+COPY httpd-config/nagios.conf /etc/httpd/conf.d/
+
+EXPOSE 80
+COPY entrypoint.sh /tmp/
+ENTRYPOINT ["/tmp/entrypoint.sh"]
+CMD ["httpd","-DFOREGROUND"]
+
