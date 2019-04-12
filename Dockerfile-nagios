@@ -24,8 +24,11 @@ RUN cd /tmp && \
     make && \
     make install 
 
+
 COPY entrypoint.sh /tmp/
+RUN chown root:root /tmp/entrypoint.sh
+RUN chmod +x /tmp/entrypoint.sh
 
 EXPOSE 80
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["/tmp/entrypoint.sh"]
 CMD ["/usr/local/nagios/bin/nagios","/usr/local/nagios/etc/nagios.cfg"]
