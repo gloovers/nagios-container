@@ -4,10 +4,19 @@ WORKDIR /tmp
 RUN yum -y update
 RUN yum -y install httpd php wget perl openssl-devel epel-release perl-Net-SNMP which unzip
 
+RUN groupadd -g 1000 nagios && \
+    usermod -G nagios apache
+
 COPY ./httpd-config/nagios.conf /etc/httpd/conf.d/
+RUN chown root:root /etc/httpd/conf.d/nagios.conf
 
 EXPOSE 80
 COPY ./entrypoint.sh /tmp/
+
+RUN chown root:root /tmp/entrypoint.sh && \
+    chmod +x /tmp/entrypoint.sh
+
+
 ENTRYPOINT ["/tmp/entrypoint.sh"]
 CMD ["httpd","-DFOREGROUND"]
 
