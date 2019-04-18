@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  nagios:
+    image: nagios:0.1
+    restart: on-failure
+    volumes:
+      - nagios_data:/usr/local/nagios
+    logging:
+      driver: journald
+      options:
+        tag: nagios 
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
+
+  httpd:
+    image: n-httpd:0.1
+    ports:
+      - 80:80
+    restart: on-failure
+    volumes:
+      - nagios_data:/nagios
+
+volumes:
+    nagios_data:
