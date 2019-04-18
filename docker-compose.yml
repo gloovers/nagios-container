@@ -5,7 +5,7 @@ services:
     image: nagios:0.1
     restart: on-failure
     volumes:
-      - nagios_data:/usr/local/nagios
+      - nagios-data:/usr/local/nagios
     logging:
       driver: journald
       options:
@@ -17,12 +17,12 @@ services:
         hard: 40000
 
   httpd:
-    image: n-httpd:0.1
+    image: httpd:0.1
     ports:
       - 80:80
     restart: on-failure
     volumes:
-      - nagios_data:/nagios
+      - nagios-data:/usr/local/nagios
 
 volumes:
-    nagios_data:
+    nagios-data:
