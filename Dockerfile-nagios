@@ -29,6 +29,32 @@ RUN cd /tmp && \
     make install 
 
 
+WORKDIR /tmp/check-mk-raw-1.4.0.cre
+RUN wget -q https://mathias-kettner.de/support/1.4.0/check-mk-raw-1.4.0.cre.tar.gz
+RUN tar -zxvf check-mk-raw-1.4.0.cre.tar.gz -C ../
+RUN ls -la && pwd
+RUN rm -rf check-mk-raw-1.4.0.cre.tar.gz
+RUN cd /tmp/check-mk-raw-1.4.0.cre 
+    
+RUN ls -la && pwd 
+RUN ./configure --with-nagios4
+RUN make 
+
+RUN cd ./packages/mk-livestatus/mk-livestatus-1.4.0 && \
+    make clean && \
+    ./configure --with-nagios4 && \
+    make && \
+    make install && \
+    rm -rf /tmp/check-mk-raw-1.4.0.cre
+
+
+
+  
+RUN echo "broker_module=/usr/local/lib/mk-livestatus/livestatus.o /usr/local/nagios/var/rw/live" >> /usr/local/nagios/etc/nagios.cfg     
+
+
+
+
 COPY entrypoint.sh /tmp/
 RUN chown nagios:nagios /tmp/entrypoint.sh && \
     chmod +x /tmp/entrypoint.sh
